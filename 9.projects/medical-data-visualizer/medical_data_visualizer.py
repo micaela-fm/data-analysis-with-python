@@ -27,7 +27,14 @@ def draw_cat_plot():
     
 
     # 7
-    cat_plot = sns.catplot(data=df_cat, x='variable', y='total', hue='value', col='cardio', kind='bar')
+    cat_plot = sns.catplot(
+        data=df_cat, 
+        x='variable', 
+        y='total', 
+        hue='value', 
+        col='cardio', 
+        kind='bar'
+    )
 
 
     # 8
@@ -42,22 +49,32 @@ def draw_cat_plot():
 # 10
 def draw_heat_map():
     # 11
-    df_heat = None
+    clean_pressure = df['ap_lo'] <= df['ap_hi']
+    clean_height = (df['height'] >= df['height'].quantile(0.025)) & (df['height'] <= df['height'].quantile(0.975))
+    clean_weight = (df['weight'] >= df['weight'].quantile(0.025)) & (df['weight'] <= df['weight'].quantile(0.975))
+
+    df_heat = df[clean_pressure & clean_height & clean_weight]
 
     # 12
-    corr = None
+    corr = df_heat.corr()
 
     # 13
-    mask = None
-
-
+    mask = np.triu(np.ones_like(corr, dtype=bool))
 
     # 14
-    fig, ax = None
+    fig, ax = fig, ax = plt.subplots(figsize=(10, 8))
 
     # 15
-
-
+    sns.heatmap(
+        corr,
+        center=0,
+        annot=True,  # Annotate with correlation coefficients
+        fmt=".1f",  # Format for annotations
+        cbar_kws={"shrink": .8},  # Colorbar size
+        square=True,  # Aspect ratio 1:1
+        mask=mask,
+        ax=ax  # Pass the axes to the heatmap function
+    )
 
     # 16
     fig.savefig('heatmap.png')
