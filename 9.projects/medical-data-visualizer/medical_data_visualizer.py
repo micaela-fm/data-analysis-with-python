@@ -62,7 +62,7 @@ def draw_heat_map():
     mask = np.triu(np.ones_like(corr, dtype=bool))
 
     # 14
-    fig, ax = fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(10, 8))
 
     # 15
     sns.heatmap(
